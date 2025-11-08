@@ -302,7 +302,7 @@ $username = $userfetch["docname"];
                     <th class="table-headin">
 
 
-                      NIC
+                      nik
 
 
                     </th>
@@ -355,7 +355,7 @@ $username = $userfetch["docname"];
                       $name = $row["pname"];
                       $email = $row["pemail"];
                       // PERBAIKAN: Menggunakan pnik
-                      $nic = $row["pnik"];
+                      $nik = $row["pnik"];
                       $dob = $row["pdob"];
                       $tel = $row["ptel"];
 
@@ -364,7 +364,7 @@ $username = $userfetch["docname"];
                         substr($name, 0, 35)
                         . '</td>
                         <td>
-                        ' . substr($nic, 0, 12) . '
+                        ' . substr($nik, 0, 12) . '
                         </td>
                         <td>
                         ' . substr($tel, 0, 10) . '
@@ -414,7 +414,7 @@ $username = $userfetch["docname"];
     $name = $row["pname"];
     $email = $row["pemail"];
     // PERBAIKAN: Menggunakan pnik
-    $nic = $row["pnik"];
+    $nik = $row["pnik"];
     $dob = $row["pdob"];
     $tele = $row["ptel"];
     $address = $row["paddress"];
@@ -471,12 +471,12 @@ $username = $userfetch["docname"];
                 </tr>
                 <tr>
                   <td class="label-td" colspan="2">
-                    <label for="nic" class="form-label">NIC: </label>
+                    <label for="nik" class="form-label">nik: </label>
                   </td>
                 </tr>
                 <tr>
                   <td class="label-td" colspan="2">
-                  ' . $nic . '<br><br>
+                  ' . $nik . '<br><br>
                   </td>
                 </tr>
                 <tr>

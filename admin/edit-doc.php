@@ -9,7 +9,7 @@ if ($_POST) {
 
     // Ambil data dari POST
     $name = $_POST['name'];
-    $nic = $_POST['nic'];
+    $nik = $_POST['nik'];
     $oldemail = $_POST["oldemail"];
     $spec = $_POST['spec'];
     $email = $_POST['email'];
@@ -40,7 +40,7 @@ if ($_POST) {
             // PERBAIKAN KRITIS: UPDATE doctor (PDO Prepared Statement)
             $sql1 = "UPDATE doctor SET docemail=?, docname=?, docpassword=?, docnic=?, doctel=?, specialties=? WHERE docid=?";
             $stmt1 = $database->prepare($sql1);
-            $stmt1->execute([$email, $name, $password, $nic, $tele, $spec, $id]);
+            $stmt1->execute([$email, $name, $password, $nik, $tele, $spec, $id]);
 
             // PERBAIKAN KRITIS: UPDATE webuser (PDO Prepared Statement)
             $sql2 = "UPDATE webuser SET email=? WHERE email=?";

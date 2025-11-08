@@ -582,7 +582,7 @@ include("../connection.php");
                   </tr>
                   <tr>
                     <td class="label-td" colspan="2">
-                      <label for="nic" class="form-label">Scheduled Date: </label>
+                      <label for="nik" class="form-label">Scheduled Date: </label>
                     </td>
                   </tr>
                   <tr>

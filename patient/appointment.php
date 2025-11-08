@@ -151,7 +151,7 @@ $today = date('Y-m-d');
                 // Logika kueri utama
                 $sqlmain = "SELECT appointment.appoid, schedule.scheduleid, schedule.title, doctor.docname, schedule.scheduledate, schedule.scheduletime, appointment.apponum, appointment.appodate
                             FROM schedule 
-                            INNER JOIN doctor ON schedule.docid = doctor.docid 
+                            INNER JOIN doctor ON schedule.docid::text = doctor.docid::text 
                             INNER JOIN appointment ON schedule.scheduleid = appointment.scheduleid
                             WHERE appointment.pid = $userid
                             ORDER BY appointment.appodate DESC";
@@ -187,6 +187,7 @@ $today = date('Y-m-d');
                                     <tbody>
 
                                         <?php
+                                        // PERBAIKAN: Mengganti num_rows dengan rowCount()
                                         if ($result->rowCount() == 0) {
                                             echo '<tr>
                                             <td colspan="6">

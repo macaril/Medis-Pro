@@ -9,7 +9,7 @@ if($_POST){
         // Baris ini dihapus: $result= $database->query("select * from webuser");
 
         $name=$_POST['name'];
-        $nic=$_POST['nic'];
+        $nik=$_POST['nik'];
         $oldemail=$_POST["oldemail"];
         $address=$_POST['address'];
         $email=$_POST['email'];
@@ -38,7 +38,7 @@ if($_POST){
                 // UPDATE patient (PDO Prepared Statement, mengganti query() lama)
                 $sql1="update patient set pemail=?, pname=?, ppassword=?, pnik=?, ptel=?, paddress=? where pid=?";
                 $stmt_patient = $database->prepare($sql1);
-                $stmt_patient->execute([$email, $name, $password, $nic, $tele, $address, $id]);
+                $stmt_patient->execute([$email, $name, $password, $nik, $tele, $address, $id]);
                 
                 // [DIHAPUS]: echo $sql1; // Menghapus output debugging
 

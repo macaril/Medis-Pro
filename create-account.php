@@ -31,7 +31,7 @@ if($_POST){
     $lname=$_SESSION['personal']['lname'];
     $name=$fname." ".$lname;
     $address=$_SESSION['personal']['address'];
-    $nic=$_SESSION['personal']['nic'];
+    $nik=$_SESSION['personal']['nik'];
     $dob=$_SESSION['personal']['dob'];
     $email=$_POST['newemail'];
     $tele=$_POST['tele'];
@@ -56,7 +56,7 @@ if($_POST){
             // PERBAIKAN SQL INJECTION: Menggunakan Prepared Statement untuk INSERT patient
             $sql_patient = "INSERT INTO patient (pemail, pname, ppassword, paddress, pnik, pdob, ptel) VALUES (?, ?, ?, ?, ?, ?, ?)";
             $stmt_patient = $database->prepare($sql_patient);
-            $stmt_patient->execute([$email, $name, $newpassword, $address, $nic, $dob, $tele]);
+            $stmt_patient->execute([$email, $name, $newpassword, $address, $nik, $dob, $tele]);
 
             // PERBAIKAN SQL INJECTION: Menggunakan Prepared Statement untuk INSERT webuser
             $sql_webuser = "INSERT INTO webuser (email, usertype) VALUES (?, ?)";

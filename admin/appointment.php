@@ -552,7 +552,7 @@ include("../connection.php");
             $spcil_res = $database->query("select sname from specialties where id='$spe'");
             $spcil_array = $spcil_res->fetch(PDO::FETCH_ASSOC); // PERBAIKAN: fetch_assoc() ke fetch(PDO::FETCH_ASSOC)
             $spcil_name = $spcil_array["sname"];
-            $nic = $row['docnic'];
+            $nik = $row['docnic'];
             $tele = $row['doctel'];
             echo '
             <div id="popup1" class="overlay">
@@ -597,12 +597,12 @@ include("../connection.php");
                   </tr>
                   <tr>
                     <td class="label-td" colspan="2">
-                      <label for="nic" class="form-label">NIC: </label>
+                      <label for="nik" class="form-label">nik: </label>
                     </td>
                   </tr>
                   <tr>
                     <td class="label-td" colspan="2">
-                    ' . $nic . '<br><br>
+                    ' . $nik . '<br><br>
                     </td>
                   </tr>
                   <tr>

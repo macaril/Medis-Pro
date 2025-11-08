@@ -19,7 +19,7 @@ if (isset($_SESSION["user"])) {
 include("../connection.php");
 
 
-// PERBAIKAN: Konversi dari MySQLi Prepared Statement ke PDO
+// PERBAIKAN: Konversi kueri pengambilan user dari MySQLi ke PDO
 $sqlmain = "select * from patient where pemail=?";
 $stmt = $database->prepare($sqlmain);
 $stmt->execute([$useremail]); // PDO: Execute dengan array parameter
@@ -134,21 +134,20 @@ $today = date('Y-m-d');
         </div>
         <?php
 
-        $sqlmain = "select * from schedule inner join doctor on schedule.docid=doctor.docid where schedule.scheduledate>='$today' order by schedule.scheduledate asc";
+        // PERBAIKAN: Menambahkan type casting (::text) pada docid di JOIN
+        $sqlmain = "select * from schedule inner join doctor on schedule.docid::text=doctor.docid::text where schedule.scheduledate>='$today' order by schedule.scheduledate asc";
         $sqlpt1 = "";
         $insertkey = "";
         $q = '';
         $searchtype = "All";
         if ($_POST) {
-            //print_r($_POST);
 
             if (!empty($_POST["search"])) {
                 /*TODO: make and understand */
                 $keyword = $_POST["search"];
-                // PERBAIKAN: Menggunakan ILIKE (case-insensitive LIKE di PostgreSQL)
-                $sqlmain = "select * from schedule inner join doctor on schedule.docid=doctor.docid where schedule.scheduledate>='$today' and (doctor.docname ILIKE '%" . $keyword . "%' or schedule.title ILIKE '%" . $keyword . "%' or schedule.scheduledate ILIKE '%" . $keyword . "%' ) order by schedule.scheduledate asc";
+                // PERBAIKAN: Menggunakan ILIKE dan type casting (::text) pada docid di JOIN
+                $sqlmain = "select * from schedule inner join doctor on schedule.docid::text=doctor.docid::text where schedule.scheduledate>='$today' and (doctor.docname ILIKE '%" . $keyword . "%' or schedule.title ILIKE '%" . $keyword . "%' or schedule.scheduledate ILIKE '%" . $keyword . "%' ) order by schedule.scheduledate asc";
 
-                //echo $sqlmain;
                 $insertkey = $keyword;
                 $searchtype = "Search Result : ";
                 $q = '"';
@@ -176,8 +175,8 @@ $today = date('Y-m-d');
                             <?php
                             echo '<datalist id="doctors">';
                             // PERBAIKAN: Mengganti query() menjadi PDO dan fetch_assoc()
-                            $list11 = $database->query("select DISTINCT * from doctor;");
-                            $list12 = $database->query("select DISTINCT * from schedule GROUP BY title;");
+                            $list11 = $database->query("select DISTINCT docname,docemail from doctor;");
+                            $list12 = $database->query("select DISTINCT title from schedule GROUP BY title;");
 
 
                             // Loop 1: Fetching doctor names
