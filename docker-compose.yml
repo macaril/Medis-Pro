@@ -7,7 +7,7 @@ services:
     
     # Port 8080 di host Anda akan mengarah ke port 80 di container web.
     ports:
-      - "8080:80"  # Akses aplikasi di http://localhost:8080
+      - "3000:80"  # Akses aplikasi di http://localhost:8080
       
     # Mounting folder saat ini ke direktori web server
     volumes:
