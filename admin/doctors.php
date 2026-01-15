@@ -8,7 +8,6 @@ if (isset($_SESSION["user"])) {
     if (($_SESSION["user"] == "") or $_SESSION['usertype'] != 'a') {
         header("location: ../login.php");
     }
-
 } else {
     header("location: ../login.php");
 }
@@ -22,6 +21,7 @@ include("../connection.php");
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -35,11 +35,13 @@ include("../connection.php");
         .popup {
             animation: transitionIn-Y-bottom 0.5s;
         }
+
         .sub-table {
             animation: transitionIn-Y-bottom 0.5s;
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="menu">
@@ -168,17 +170,19 @@ include("../connection.php");
 
                 </tr>
 
-                <tr >
+                <tr>
                     <td colspan="2" style="padding-top:30px;">
                         <p class="heading-main12" style="margin-left: 45px;font-size:20px;color:rgb(49, 49, 49)">Add New Doctor</p>
                     </td>
                     <td colspan="2">
                         <a href="?action=add&id=none&error=0" class="non-style-link"><button class="login-btn btn-primary btn button-icon" style="display: flex;justify-content: center;align-items: center;margin-left:75px;background-image: url('../img/icons/add.svg');">Add New</button>
-                            </a></td>
+                        </a>
+                    </td>
                 </tr>
                 <tr>
                     <td colspan="4" style="padding-top:10px;">
-                        <p class="heading-main12" style="margin-left: 45px;font-size:18px;color:rgb(49, 49, 49)">All Doctors (<?php echo $list11->rowCount(); // Menggunakan rowCount() dari query datalist ?>)</p>
+                        <p class="heading-main12" style="margin-left: 45px;font-size:18px;color:rgb(49, 49, 49)">All Doctors (<?php echo $list11->rowCount(); // Menggunakan rowCount() dari query datalist 
+                                                                                                                                ?>)</p>
                     </td>
 
                 </tr>
@@ -188,7 +192,7 @@ include("../connection.php");
 
                 if ($_POST) {
                     $keyword = $_POST["search"];
-                    
+
                     // PERBAIKAN KRITIS: Menggunakan ILIKE untuk PostgreSQL dan Prepared Statement
                     // Simplified the numerous OR LIKE clauses into a single ILIKE
                     $sqlmain = "SELECT * FROM doctor WHERE docemail ILIKE ? OR docname ILIKE ? ORDER BY docid DESC";
@@ -248,7 +252,6 @@ include("../connection.php");
                                             <br><br><br><br>
                                             </td>
                                             </tr>';
-
                                         } else {
                                             // PERBAIKAN: Mengganti loop MySQLi dengan PDO fetch()
                                             while ($row = $stmt_result->fetch(PDO::FETCH_ASSOC)) {
@@ -256,13 +259,13 @@ include("../connection.php");
                                                 $name = $row["docname"];
                                                 $email = $row["docemail"];
                                                 $spe = $row["specialties"];
-                                                
+
                                                 // PERBAIKAN: Menggunakan PDO Prepared Statement untuk mengambil nama Specialties
                                                 $spcil_res = $database->prepare("select sname from specialties where id=?");
                                                 $spcil_res->execute([$spe]);
                                                 $spcil_array = $spcil_res->fetch(PDO::FETCH_ASSOC);
                                                 $spcil_name = $spcil_array["sname"];
-                                                
+
                                                 echo '<tr>
                                                     <td> &nbsp;' .
                                                     substr($name, 0, 30)
@@ -284,7 +287,6 @@ include("../connection.php");
                                                     </div>
                                                     </td>
                                                     </tr>';
-
                                             }
                                         }
 
@@ -329,8 +331,8 @@ include("../connection.php");
                         <table width="80%" class="sub-table scrolldown add-doc-form-container" border="0">
                         <tr>
                                 <td class="label-td" colspan="2">' .
-                $errorlist[$error_1]
-                . '</td>
+                    $errorlist[$error_1]
+                    . '</td>
                             </tr>
                             <tr>
                                 <td>
@@ -446,7 +448,6 @@ include("../connection.php");
                 </div>
                 </div>
                 ';
-
             } else {
                 echo '
                 <div id="popup1" class="overlay">
@@ -511,8 +512,8 @@ include("../connection.php");
                         <table width="80%" class="sub-table scrolldown add-doc-form-container" border="0">
                         <tr>
                                 <td class="label-td" colspan="2">' .
-                $errorlist[$error_1]
-                . '</td>
+                    $errorlist[$error_1]
+                    . '</td>
                             </tr>
                             <tr>
                                 <td>
@@ -774,7 +775,15 @@ include("../connection.php");
                         </div>
                         <div style="display: flex;justify-content: center;">
                         <a href="delete-doctor.php?id=' . $id . '" class="non-style-link"><button  class="btn-primary btn"  style="display: flex;justify-content: center;align-items: center;margin:10px;padding:10px;"<font class="tn-in-text">&nbsp;Yes&nbsp;</font></button></a>&nbsp;&nbsp;&nbsp;
-                        <a href="doctors.php" class="non-style-link"><button class="btn-primary btn" style="display: flex;justify-content: center;align-items: center;margin:10px;padding:10px;"><font class="tn-in-text">&nbsp;&nbsp;No&nbsp;&nbsp;</font></button></a>
+                        <div style="display: flex;justify-content: center;align-items: center;">
+    <a href="doctors.php" class="non-style-link btn-primary-soft btn" style="margin:10px; padding:10px 20px;">
+        &nbsp;&nbsp;Tidak&nbsp;&nbsp;
+    </a>
+
+    <a href="delete-doctor.php?id=' . $id . '" class="non-style-link btn-primary btn" style="margin:10px; padding:10px 20px; background-color: #e74c3c !important; border-color: #e74c3c !important;">
+        &nbsp;&nbsp;Ya, Hapus&nbsp;&nbsp;
+    </a>
+</div>
 
                         </div>
                     </center>
@@ -785,7 +794,8 @@ include("../connection.php");
     }
 
     ?>
-</div>
+    </div>
 
 </body>
+
 </html>

@@ -147,7 +147,7 @@ $today = date('Y-m-d');
               echo '<datalist id="doctors">';
               // PERBAIKAN: Mengganti MySQLi query() dengan PDO query()
               $list11 = $database->query("select DISTINCT * from doctor;");
-              $list12 = $database->query("select DISTINCT * from schedule GROUP BY title;");
+              $list12 = $database->query("select DISTINCT title from schedule;");
 
               // Loop PDO fetch()
               while ($row00 = $list11->fetch(PDO::FETCH_ASSOC)) {
@@ -213,7 +213,7 @@ $today = date('Y-m-d');
                         $id = $_GET["id"];
 
                         // PERBAIKAN: Konversi kueri detail sesi dari MySQLi ke PDO
-                        $sqlmain = "select * from schedule inner join doctor on schedule.docid=doctor.docid where schedule.scheduleid=? order by schedule.scheduledate desc";
+                        $sqlmain = "select * from schedule inner join doctor on schedule.docid::integer = doctor.docid where schedule.scheduleid=? order by schedule.scheduledate desc";
                         $stmt = $database->prepare($sqlmain);
                         $stmt->execute([$id]);
                         $row = $stmt->fetch(PDO::FETCH_ASSOC);

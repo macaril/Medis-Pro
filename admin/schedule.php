@@ -8,7 +8,6 @@ if (isset($_SESSION["user"])) {
     if (($_SESSION["user"] == "") or $_SESSION['usertype'] != 'a') {
         header("location: ../login.php");
     }
-
 } else {
     header("location: ../login.php");
 }
@@ -22,6 +21,7 @@ include("../connection.php");
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -35,11 +35,13 @@ include("../connection.php");
         .popup {
             animation: transitionIn-Y-bottom 0.5s;
         }
+
         .sub-table {
             animation: transitionIn-Y-bottom 0.5s;
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="menu">
@@ -307,7 +309,6 @@ include("../connection.php");
                                             <br><br><br><br>
                                             </td>
                                             </tr>';
-
                                         } else {
                                             // PERBAIKAN: Mengganti loop MySQLi dengan PDO fetch()
                                             while ($row = $stmt_result->fetch(PDO::FETCH_ASSOC)) {
@@ -340,7 +341,6 @@ include("../connection.php");
                                                     </div>
                                                     </td>
                                                     </tr>';
-
                                             }
                                         }
 
@@ -520,8 +520,12 @@ include("../connection.php");
             </div>
             ';
         } elseif ($action == 'view') {
-            // PERBAIKAN: Konversi kueri view detail dari MySQLi ke PDO
-            $sqlmain = "SELECT schedule.scheduleid, schedule.title, doctor.docname, schedule.scheduledate, schedule.scheduletime, schedule.nop FROM schedule INNER JOIN doctor ON schedule.docid=doctor.docid WHERE schedule.scheduleid=?";
+            // PERBAIKAN KRITIS: Tambahkan ::text pada join docid agar PostgreSQL bisa membandingkan String vs Integer
+            $sqlmain = "SELECT schedule.scheduleid, schedule.title, doctor.docname, schedule.scheduledate, schedule.scheduletime, schedule.nop 
+                        FROM schedule 
+                        INNER JOIN doctor ON schedule.docid::text = doctor.docid::text 
+                        WHERE schedule.scheduleid=?";
+
             $stmt_view = $database->prepare($sqlmain);
             $stmt_view->execute([$id]);
             $row = $stmt_view->fetch(PDO::FETCH_ASSOC);
@@ -535,10 +539,16 @@ include("../connection.php");
 
 
             // PERBAIKAN: Konversi kueri pasien yang terdaftar dari MySQLi ke PDO
-            $sqlmain12 = "SELECT * FROM appointment INNER JOIN patient ON patient.pid=appointment.pid INNER JOIN schedule ON schedule.scheduleid=appointment.scheduleid WHERE schedule.scheduleid=?";
+            // Catatan: Jika pid atau scheduleid juga beda tipe data, tambahkan ::text juga di sini. 
+            // Namun biasanya pid dan scheduleid sudah sama-sama integer.
+            $sqlmain12 = "SELECT * FROM appointment 
+                          INNER JOIN patient ON patient.pid::text = appointment.pid::text 
+                          INNER JOIN schedule ON schedule.scheduleid::text = appointment.scheduleid::text 
+                          WHERE schedule.scheduleid=?";
+
             $stmt12 = $database->prepare($sqlmain12);
             $stmt12->execute([$id]);
-            
+
             echo '
             <div id="popup1" class="overlay">
               <div class="popup" style="width: 70%;">
@@ -634,10 +644,10 @@ include("../connection.php");
                              
                          </thead>
                          <tbody>';
-                         
-                         // PERBAIKAN: Mengganti num_rows dan fetch_assoc() dengan PDO fetch()
-                         if ($stmt12->rowCount() == 0) {
-                            echo '<tr>
+
+            // PERBAIKAN: Mengganti num_rows dan fetch_assoc() dengan PDO fetch()
+            if ($stmt12->rowCount() == 0) {
+                echo '<tr>
                                 <td colspan="4">
                                 <br><br><br><br>
                                 <center>
@@ -648,20 +658,20 @@ include("../connection.php");
                                 <br><br><br><br>
                                 </td>
                             </tr>';
-                         } else {
-                            while ($row12 = $stmt12->fetch(PDO::FETCH_ASSOC)) {
-                                $apponum = $row12["apponum"];
-                                $pid = $row12["pid"];
-                                $pname = $row12["pname"];
-                                $ptel = $row12["ptel"];
+            } else {
+                while ($row12 = $stmt12->fetch(PDO::FETCH_ASSOC)) {
+                    $apponum = $row12["apponum"];
+                    $pid = $row12["pid"];
+                    $pname = $row12["pname"];
+                    $ptel = $row12["ptel"];
 
-                                echo '<tr style="text-align:center;">
+                    echo '<tr style="text-align:center;">
                                     <td>
                                     ' . substr($pid, 0, 15) . '
                                     </td>
                                     <td style="font-weight:600;padding:25px">' .
-                                    substr($pname, 0, 25)
-                                    . '</td>
+                        substr($pname, 0, 25)
+                        . '</td>
                                     <td style="text-align:center;font-size:23px;font-weight:500; color: var(--btnnicetext);">
                                     ' . $apponum . '
                                     </td>
@@ -669,10 +679,10 @@ include("../connection.php");
                                     ' . substr($ptel, 0, 25) . '
                                     </td>
                                 </tr>';
-                            }
-                         }
+                }
+            }
 
-                         echo '</tbody>
+            echo '</tbody>
                         </table>
                         </div>
                         </center>
@@ -698,7 +708,8 @@ include("../connection.php");
     }
 
     ?>
-</div>
+    </div>
 
 </body>
+
 </html>

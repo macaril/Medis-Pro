@@ -176,7 +176,7 @@ $today = date('Y-m-d');
                             echo '<datalist id="doctors">';
                             // PERBAIKAN: Mengganti query() menjadi PDO dan fetch_assoc()
                             $list11 = $database->query("select DISTINCT docname,docemail from doctor;");
-                            $list12 = $database->query("select DISTINCT title from schedule GROUP BY title;");
+                            $list12 = $database->query("select DISTINCT title from schedule;");
 
 
                             // Loop 1: Fetching doctor names

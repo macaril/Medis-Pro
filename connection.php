@@ -11,8 +11,7 @@ $dsn = "pgsql:host=$servername;port=$port;dbname=$dbname";
 
 try {
     $database = new PDO($dsn, $username, $password, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
-    // Jika koneksi berhasil, Anda mungkin ingin mencetak sesuatu untuk konfirmasi
-    // echo "Koneksi Supabase Berhasil!";
 } catch (PDOException $e) {
     die("Koneksi Gagal (PostgreSQL): " . $e->getMessage());
 }
+?>
