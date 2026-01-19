@@ -31,18 +31,17 @@ $sqlmain = "select * from patient where pemail=?";
 $stmt = $database->prepare($sqlmain);
 
 try {
-    $stmt->execute([$useremail]);
-    $userfetch = $stmt->fetch(PDO::FETCH_ASSOC);
+  $stmt->execute([$useremail]);
+  $userfetch = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if (!$userfetch) {
-        die("ERROR: Patient Data Not Found (useremail: $useremail)");
-    }
-    
-    $userid = $userfetch["pid"];
-    $username = $userfetch["pname"];
+  if (!$userfetch) {
+    die("ERROR: Patient Data Not Found (useremail: $useremail)");
+  }
 
+  $userid = $userfetch["pid"];
+  $username = $userfetch["pname"];
 } catch (PDOException $e) {
-     die("Database Error (User Fetch): " . $e->getMessage());
+  die("Database Error (User Fetch): " . $e->getMessage());
 }
 
 
@@ -50,30 +49,56 @@ try {
 
 if ($_POST) {
   if (isset($_POST["booknow"])) {
-    
-    
+
     $apponum = $_POST["apponum"];
     $scheduleid = $_POST["scheduleid"];
     $date = $_POST["date"];
-    
+
     // PERBAIKAN: Gunakan blok try-catch untuk operasi INSERT
     try {
-        $sql2 = "INSERT INTO appointment (pid, apponum, scheduleid, appodate) VALUES (?, ?, ?, ?)";
-        $stmt_insert = $database->prepare($sql2);
-        
-        // Eksekusi Prepared Statement
-        $stmt_insert->execute([$userid, $apponum, $scheduleid, $date]);
+      // --- TAMBAHAN LOGIKA VALIDASI KUOTA (MULAI) ---
 
+      // 1. Ambil batas maksimal (NOP) dari tabel schedule
+      $stmtLimit = $database->prepare("SELECT nop, title FROM schedule WHERE scheduleid = ?");
+      $stmtLimit->execute([$scheduleid]);
+      $scheduleData = $stmtLimit->fetch(PDO::FETCH_ASSOC);
 
-        header("location: appointment.php?action=booking-added&id=" . $apponum . "&titleget=none");
-        exit(); 
+      if (!$scheduleData) {
+        die("Jadwal tidak ditemukan.");
+      }
+
+      $max_patients = $scheduleData['nop'];
+      $session_title = $scheduleData['title'];
+
+      // 2. Hitung jumlah pasien yang SUDAH terdaftar di jadwal ini (Real-time count)
+      $stmtCount = $database->prepare("SELECT count(*) as total FROM appointment WHERE scheduleid = ?");
+      $stmtCount->execute([$scheduleid]);
+      $countData = $stmtCount->fetch(PDO::FETCH_ASSOC);
+      $current_bookings = $countData['total'];
+
+      // 3. Bandingkan: Jika sudah penuh, batalkan proses
+      if ($current_bookings >= $max_patients) {
+        // Opsional: Redirect kembali dengan pesan error
+        echo "<script>
+                    alert('Mohon maaf, kuota untuk sesi $session_title sudah penuh (Maksimal $max_patients pasien).');
+                    window.location.href = 'schedule.php';
+                  </script>";
+        exit();
+      }
+      // Lanjutkan proses INSERT jika kuota aman
+      $sql2 = "INSERT INTO appointment (pid, apponum, scheduleid, appodate) VALUES (?, ?, ?, ?)";
+      $stmt_insert = $database->prepare($sql2);
+
+      // Eksekusi Prepared Statement
+      $stmt_insert->execute([$userid, $apponum, $scheduleid, $date]);
+
+      header("location: appointment.php?action=booking-added&id=" . $apponum . "&titleget=none");
+      exit();
     } catch (PDOException $e) {
-        // Tampilkan pesan error database jika INSERT gagal
-        die("8. BOOKING FAILED! Database Error: " . $e->getMessage());
+      // Tampilkan pesan error database jika INSERT gagal
+      die("8. BOOKING FAILED! Database Error: " . $e->getMessage());
     }
   }
 }
 
 die("9. Script Finished without POST. (Ini tidak seharusnya terlihat saat klik tombol)");
-
-?>

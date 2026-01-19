@@ -2,12 +2,10 @@ version: '3.8'
 
 services:
   web:
-    # Menggunakan Dockerfile yang sudah ada (Pastikan sudah dimodifikasi, lihat bagian 2)
     build: .
-    
-    # Port 8080 di host Anda akan mengarah ke port 80 di container web.
+
     ports:
-      - "8080:80"  # Akses aplikasi di http://localhost:8080
+      - "8080:80"  
       
     # Mounting folder saat ini ke direktori web server
     volumes:

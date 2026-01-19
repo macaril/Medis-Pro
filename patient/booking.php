@@ -229,10 +229,18 @@ $today = date('Y-m-d');
                         $sql2 = "select * from appointment where scheduleid=?";
                         $stmt2 = $database->prepare($sql2);
                         $stmt2->execute([$id]);
-                        $apponum = ($stmt2->rowCount()) + 1; // PDO: Menggunakan rowCount()
-
+                        
+                        $current_booked = $stmt2->rowCount(); 
+                        $max_quota = $row["nop"]; 
+                        $is_full = ($current_booked >= $max_quota); 
+                        
+                        $apponum = $current_booked + 1; 
+                        
+                        $quota_color = $is_full ? 'red' : 'green';
+                        $status_text = $is_full ? 'Jadwal Penuh' : 'Tersedia';
 
                         echo '
+                                        <form action="booking-complete.php" method="post">
                                         <form action="booking-complete.php" method="post">
                                             <input type="hidden" name="scheduleid" value="' . $scheduleid . '" >
                                             <input type="hidden" name="apponum" value="' . $apponum . '" >
@@ -262,7 +270,9 @@ $today = date('Y-m-d');
                                                             Session Title: ' . $title . '<br>
                                                             Session Scheduled Date: ' . $scheduledate . '<br>
                                                             Session Starts : ' . $scheduletime . '<br>
-                                                            Channeling fee : <b>LKR.2 000.00</b>
+                                                            Channeling fee : <b>LKR.2 000.00</b><br><br>
+                                                            
+                                                            Status Kuota: <b style="color:'.$quota_color.'; font-size: 20px;">' . $current_booked . ' / ' . $max_quota . '</b> ('.$status_text.')
 
                                                         </div>
                                                         <br>
@@ -282,7 +292,7 @@ $today = date('Y-m-d');
                                                             Your Appointment Number
                                                         </div>
                                                         <center>
-                                                        <div class=" dashboard-icons" style="margin-left: 0px;width:90%;font-size:70px;font-weight:800;text-align:center;color:var(--btnnictext);background-color: var(--btnice)">' . $apponum . '</div>
+                                                        <div class=" dashboard-icons" style="margin-left: 0px;width:90%;font-size:70px;font-weight:800;text-align:center;color:var(--btnnictext);background-color: var(--btnice)">' . ($is_full ? '-' : $apponum) . '</div>
                                                     </center>
                                                        
                                                         </div><br>
@@ -295,8 +305,19 @@ $today = date('Y-m-d');
                                         </td>
                                         </tr>
                                         <tr>
-                                            <td>
-                                                <input type="Submit" class="login-btn btn-primary btn btn-book" style="margin-left:10px;padding-left: 25px;padding-right: 25px;padding-top: 10px;padding-bottom: 10px;width:95%;text-align: center;" value="Book now" name="booknow">
+                                            <td>';
+
+                                            // --- LOGIKA TOMBOL BOOK NOW ---
+                                            if ($is_full) {
+                                                // Jika Penuh: Tampilkan tombol abu-abu (disabled)
+                                                echo '<input type="button" class="login-btn btn" style="margin-left:10px;padding-left: 25px;padding-right: 25px;padding-top: 10px;padding-bottom: 10px;width:95%;text-align: center; background-color: #cccccc; color: #666; cursor: not-allowed;" value="Full Booked" disabled>';
+                                            } else {
+                                                // Jika Tersedia: Tampilkan tombol normal
+                                                echo '<input type="Submit" class="login-btn btn-primary btn btn-book" style="margin-left:10px;padding-left: 25px;padding-right: 25px;padding-top: 10px;padding-bottom: 10px;width:95%;text-align: center;" value="Book now" name="booknow">';
+                                            }
+                                            // ------------------------------
+
+                                        echo '
                                             </form>
                                             </td>
                                         </tr>

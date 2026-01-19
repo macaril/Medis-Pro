@@ -146,7 +146,7 @@ $today = date('Y-m-d');
                 /*TODO: make and understand */
                 $keyword = $_POST["search"];
                 // PERBAIKAN: Menggunakan ILIKE dan type casting (::text) pada docid di JOIN
-                $sqlmain = "select * from schedule inner join doctor on schedule.docid::text=doctor.docid::text where schedule.scheduledate>='$today' and (doctor.docname ILIKE '%" . $keyword . "%' or schedule.title ILIKE '%" . $keyword . "%' or schedule.scheduledate ILIKE '%" . $keyword . "%' ) order by schedule.scheduledate asc";
+                $sqlmain = "select * from schedule inner join doctor on schedule.docid::text=doctor.docid::text where schedule.scheduledate>='$today' and (doctor.docname ILIKE '%" . $keyword . "%' or schedule.title ILIKE '%" . $keyword . "%' or schedule.scheduledate::text ILIKE '%" . $keyword . "%' ) order by schedule.scheduledate asc";
 
                 $insertkey = $keyword;
                 $searchtype = "Search Result : ";

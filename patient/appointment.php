@@ -127,9 +127,11 @@ $today = date('Y-m-d');
             <table border="0" width="100%" style=" border-spacing: 0;margin:0;padding:0;margin-top:25px; ">
                 <tr>
                     <td width="13%">
-                        <a href="appointment.php"><button class="login-btn btn-primary-soft btn btn-icon-back" style="padding-top:11px;padding-bottom:11px;margin-left:20px;width:125px">
+                        <a href="index.php">
+                            <button class="login-btn btn-primary-soft btn btn-icon-back" style="padding-top:11px;padding-bottom:11px;margin-left:20px;width:125px">
                                 <font class="tn-in-text">Back</font>
-                            </button></a>
+                            </button>
+                        </a>
                     </td>
                     <td>
                         <p style="font-size: 20px;font-weight:900;padding-left:40px;" class="heading-main12">My Bookings</p>
@@ -155,10 +157,10 @@ $today = date('Y-m-d');
                             INNER JOIN appointment ON schedule.scheduleid = appointment.scheduleid
                             WHERE appointment.pid = $userid
                             ORDER BY appointment.appodate DESC";
-                
+
                 // Mengganti MySQLi query() dengan PDO query()
                 $result = $database->query($sqlmain);
-                
+
                 $header = "All Bookings";
 
                 ?>
@@ -211,7 +213,7 @@ $today = date('Y-m-d');
                                                 $scheduledate = $row["scheduledate"];
                                                 $scheduletime = $row["scheduletime"];
                                                 $apponum = $row["apponum"];
-                                                
+
                                                 echo '<tr>
                                                     <td>' . $apponum . '</td>
                                                     <td>' . substr($title, 0, 30) . '</td>

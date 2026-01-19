@@ -774,15 +774,19 @@ include("../connection.php");
                             
                         </div>
                         <div style="display: flex;justify-content: center;">
-                        <a href="delete-doctor.php?id=' . $id . '" class="non-style-link"><button  class="btn-primary btn"  style="display: flex;justify-content: center;align-items: center;margin:10px;padding:10px;"<font class="tn-in-text">&nbsp;Yes&nbsp;</font></button></a>&nbsp;&nbsp;&nbsp;
-                        <div style="display: flex;justify-content: center;align-items: center;">
-    <a href="doctors.php" class="non-style-link btn-primary-soft btn" style="margin:10px; padding:10px 20px;">
-        &nbsp;&nbsp;Tidak&nbsp;&nbsp;
+    
+    <a href="delete-doctor.php?id=' . $id . '" class="non-style-link">
+        <button class="btn-primary btn" style="display: flex;justify-content: center;align-items: center;margin:10px;padding:10px;">
+            <font class="tn-in-text">&nbsp;Yes&nbsp;</font>
+        </button>
+    </a>&nbsp;&nbsp;&nbsp;
+    
+    <a href="doctors.php" class="non-style-link">
+        <button class="btn-primary btn" style="display: flex;justify-content: center;align-items: center;margin:10px;padding:10px;">
+            <font class="tn-in-text">&nbsp;&nbsp;No&nbsp;&nbsp;</font>
+        </button>
     </a>
 
-    <a href="delete-doctor.php?id=' . $id . '" class="non-style-link btn-primary btn" style="margin:10px; padding:10px 20px; background-color: #e74c3c !important; border-color: #e74c3c !important;">
-        &nbsp;&nbsp;Ya, Hapus&nbsp;&nbsp;
-    </a>
 </div>
 
                         </div>
